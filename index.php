@@ -1,3 +1,8 @@
+<?php 
+  session_start();
+include_once "db.php"
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -44,15 +49,26 @@
         <ul class="nav-items">
           <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="./blogs.html">Blog</a></li>
-          <li class="nav-item"><a class="nav-link" href="./dieticians.html">Dieticians</a></li>
-          <li class="nav-item"><a class="nav-link" href="./foods.html">Foods</a></li>
-          <li class="nav-item"><a class="nav-link" href="./contactPage.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="./blogs.php">Blog</a></li>
+          <li class="nav-item"><a class="nav-link" href="./dieticians.php">Dieticians</a></li>
+          <li class="nav-item"><a class="nav-link" href="./foods.php">Foods</a></li>
+          <li class="nav-item"><a class="nav-link" href="./contactPage.php">Contact</a></li>
         </ul>
-        <a class="logo-button" href="./userLogin.html">
+<?php
+  if(isset($_SESSION["user"])){?>
+    <button type="submit" class="btn text-light btn-dark user-button" onclick="myFunction()"><?php echo $_SESSION["user"] ?></button>
+    <?php
+  }else{?>
+<a class="logo-button" href="./userLogin.php">
           Log in
           <i class="fas fa-sign-in-alt"></i>
-        </a>
+        </a>    
+<?php
+  }    
+?>
+
+
+
       </nav>
       <div class="delivery">DELIVERY</div>
       <div class="main-all">
@@ -61,7 +77,7 @@
                 <h6>WELCOME TO OUR </h6>
                 <h1>Healthy Food <br> Collection !</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.  Quisquam <br> minima veritatis natus fuga repudiandae in! <br> Accusantium totam!</p>
-                <a href="#">SHOP NOW</a>
+                <a href="./foods.php">SHOP NOW</a>
             </div>
         <img class="main-Minitabak" src="./images/mainMiniTabak.png" alt="">
         </div>
@@ -142,52 +158,26 @@
       <section class="blog container" id="blog">
         <h1>Blog</h1>
         <div class="blog-cards">
-          <a href="#" class="blog-card">
-          <img src="./images/blog-card.png" alt="">
-          <div class="blog-details">
-            <h2>Can Running Give You Abs ?</h2>
-            <p>Lorem ipsum dolor sit amet consectetur  adipisicing elit. Repellendus, harum!...</p>
-            <div class="blog-date">
-              <i class="far fa-calendar-alt"></i>
-              <p>18 AUGUST 2020</p>
-            </div>
-          </div>
-        </a>
-        <a href="#" class="blog-card">
-          <img src="./images/blog-card.png" alt="">
-          <div class="blog-details">
-            <h2>Can Running Give You Abs ?</h2>
-            <p>Lorem ipsum dolor sit amet consectetur  adipisicing elit. Repellendus, harum!...</p>
-            <div class="blog-date">
-              <i class="far fa-calendar-alt"></i>
-              <p>18 AUGUST 2020</p>
-            </div>
-          </div>
-        </a>
-        <a href="#" class="blog-card">
-          <img src="./images/blog-card.png" alt="">
-          <div class="blog-details">
-            <h2>Can Running Give You Abs ?</h2>
-            <p>Lorem ipsum dolor sit amet consectetur  adipisicing elit. Repellendus, harum!...</p>
-            <div class="blog-date">
-              <i class="far fa-calendar-alt"></i>
-              <p>18 AUGUST 2020</p>
-            </div>
-          </div>
-        </a>
-        <a href="#" class="blog-card">
-          <img src="./images/blog-card.png" alt="">
-          <div class="blog-details">
-            <h2>Can Running Give You Abs ?</h2>
-            <p>Lorem ipsum dolor sit amet consectetur  adipisicing elit. Repellendus, harum!...</p>
-            <div class="blog-date">
-              <i class="far fa-calendar-alt"></i>
-              <p>18 AUGUST 2020</p>
-            </div>
-          </div>
-        </a>
+                      <?php
+      $Sorgu=mysqli_query($db,"SELECT * FROM blogs LIMIT 4");
+      while($blogs=mysqli_fetch_assoc($Sorgu)){?>
+        <a href="./blogDetails.php?blogId=<?php echo$blogs["blogs_id"] ?>" class="blog-card blog-card-shadow">
+              <img src="<?php echo $blogs["blog_img"] ?>"  alt="" />
+              <div class="blog-details">
+                <h2><?php echo $blogs["blogs_title"] ?></h2>
+                <p><?php echo substr($blogs["blogs_main"],0,120)."..." ?> </p>
+                <div class="blog-date">
+                  <i class="far fa-calendar-alt"></i>
+                  <p><?php echo $blogs["blogs_date"] ?></p>
+                </div>
+              </div>
+            </a>
+<?php
+      }
+  
+?>
         </div>
-        <a class="view-more" href="./blogs.html">
+        <a class="view-more" href="./blogs.php">
           <p>View More</p>
         </a>
       </section>
@@ -195,9 +185,12 @@
         <h1>OUR PERSONAL <span>DIETITIANS</span></h1>
         <p>Lorem ipsum dolor sit amet consectetur adipisicing.</p>
         <div class="dietician-cards">
-          <div class="dieticians-card">
-            <img src="./images/pd1.png" alt="">
-            <h3>Hilaario Arkema</h3>
+<?php
+      $Sorgu=mysqli_query($db,"SELECT * FROM dieticians LIMIT 4");
+      while($dieticians=mysqli_fetch_assoc($Sorgu)){?>
+        <div class="dieticians-card">
+            <img src="<?php echo $dieticians["dietician_img"]?>" alt="">
+            <h3><?php echo $dieticians["dietician_name"]?></h3>
             <p>Personal Dietitian</p>
             <div class="dietitian-socials">
               <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -205,38 +198,16 @@
               <a href="#"><i class="fab fa-instagram"></i></a>
             </div>
           </div>
-          <div class="dieticians-card">
-            <img src="./images/pd2.png" alt="">
-            <h3>Dania Hersch</h3>
-            <p>Personal Dietitian</p>
-            <div class="dietitian-socials">
-              <a href="#"><i class="fab fa-facebook-f"></i></a>
-              <a href="#"> <i class="fab fa-twitter"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="dieticians-card">
-            <img src="./images/pd3.png" alt="">
-            <h3>Emin Franjić</h3>
-            <p>Personal Dietitian</p>
-            <div class="dietitian-socials">
-              <a href="#"><i class="fab fa-facebook-f"></i></a>
-              <a href="#"> <i class="fab fa-twitter"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="dieticians-card">
-            <img src="./images/pd4.png" alt="">
-            <h3>Loane Brisbois</h3>
-            <p>Personal Dietitian</p>
-            <div class="dietitian-socials">
-             <a href="#"><i class="fab fa-facebook-f"></i></a>
-              <a href="#"> <i class="fab fa-twitter"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
+<?php
+      }
+  
+?>
         </div>
-        <a class="view-more" href="./dieticians.html">
+
+
+    
+          
+        <a class="view-more" href="./dieticians.php">
           <p>View More</p>
         </a>
       </section>
@@ -298,5 +269,12 @@
         <script src="https://unpkg.com/scrollreveal"></script>
         <script src="./scrolReveal.js"></script>
         <script src="./script.js"></script>
+        <script>
+          function myFunction() {
+            if (confirm("<?php echo $_SESSION["user"]; ?> Are you sure to Log out!")) {
+              window.location.replace("userLogin.php");
+            }
+          }
+      </script>
   </body>
 </html>

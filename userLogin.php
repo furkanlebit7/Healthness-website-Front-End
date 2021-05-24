@@ -1,3 +1,7 @@
+<?php
+  session_start();
+  session_destroy();
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,15 +42,15 @@
       <div class="user-login-container">
         <h3>USER<br />LOGIN</h3>
         <p class="user-login-welcome">Welcome to the website</p>
-        <form class="user-login-form">
+        <form class="user-login-form" method="POST" action="operations.php">
           <p class="login-error text-dark"></p>
           <div class="user-login-input-border">
             <i class="fas fa-user"></i>
-            <input type="text" placeholder="USERNAME" id="username" />
+            <input type="text" placeholder="USERNAME" id="username" name="username" />
           </div>
           <div class="user-login-input-border">
             <i class="fas fa-lock"></i>
-            <input type="text" placeholder="PASSWORD" id="password" />
+            <input type="password" placeholder="PASSWORD" id="password" name="userpassword"/>
           </div>
           <div class="user-login-check-div">
             <input
@@ -60,13 +64,14 @@
           </div>
           <input
             class="user-login-button"
-            type="button"
+            type="submit"
             onclick="checkUserInfo()"
             value="LOGIN"
+            name="login"
           />
         </form>
         <p class="user-login-not-a-member">
-          Not a Member ? <a href="./userSıgnUp.html">Sign Up</a>
+          Not a Member ? <a href="./userSıgnUp.php">Sign Up</a>
         </p>
       </div>
     </div>
@@ -82,8 +87,7 @@
         } else if (password.value.length < 6 || password.value.length > 16) {
           errorInfo = "Password length must be between 6 and 16 character";
         } else {
-          error.innerHTML = "";
-          window.location = "index.html";
+          error.innerHTML = "başarılı";
         }
         error.innerHTML = "*" + errorInfo;
       }
@@ -92,4 +96,21 @@
       }
     </script>
   </body>
+
+  <?php
+
+      if(isset($_GET["durum"])){
+        if($_GET["durum"]=="no"){
+          ?>
+             <script>
+                 window.onload=function(){
+                     alert("Kullanıcı adı veya şifre yanlış");
+                 }
+             </script>
+             <?php
+        }
+      }
+
+?>
+  
 </html>

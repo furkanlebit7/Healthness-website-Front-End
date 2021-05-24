@@ -1,3 +1,6 @@
+<?php 
+  session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -41,45 +44,53 @@
   <body>
     <header>
       <nav class="container">
-        <a href="./index.html">
+        <a href="./index.php">
           <img class="logo-img" src="./images/logo.png" alt="HealthNess" />
         </a>
         <ul class="nav-items">
           <li class="nav-item">
-            <a class="nav-link" href="/index.html">Home</a>
+            <a class="nav-link" href="./index.php">Home</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="./blogs.html">Blog</a>
+            <a class="nav-link" href="./blogs.php">Blog</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./dieticians.html">Dieticians</a>
+            <a class="nav-link" href="./dieticians.php">Dieticians</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./foods.html">Foods</a>
+            <a class="nav-link" href="./foods.php">Foods</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./contactPage.html">Contact</a>
+            <a class="nav-link" href="./contactPage.php">Contact</a>
           </li>
         </ul>
-        <a class="logo-button" href="#">
+        <?php
+  if(isset($_SESSION["user"])){?>
+    <button type="button" class="btn text-light btn-dark user-button" onclick="myFunction()"><?php echo $_SESSION["user"] ?></button>
+    <?php
+  }else{?>
+<a class="logo-button" href="./userLogin.php">
           Log in
           <i class="fas fa-sign-in-alt"></i>
-        </a>
+        </a>    
+<?php
+  }    
+?>
       </nav>
       <div class="contact-page container">
         <h3>GET IN TOUCH</h3>
         <div class="contact-page-informations">
           <div class="contact-page-information-info">
-            <i class="fal fa-phone-alt"></i>
+            <i class="fas fa-phone-alt fa-lg"></i>
             <p>+90 553 224 20 55</p>
           </div>
           <div class="contact-page-information-info">
-            <i class="fal fa-envelope"></i>
+            <i class="fas fa-envelope fa-lg"></i>
             <p>e-healthness@gmail.com</p>
           </div>
           <div class="contact-page-information-info">
-            <i class="fal fa-map-marker-alt"></i>
+            <i class="fas fa-map-marker-alt fa-lg"></i>
             <p>2215 John Daniel Drive Clark, MO 65243</p>
           </div>
         </div>
@@ -118,6 +129,7 @@
             class="contact-page-input-button"
             type="button"
             value="SUBMIT"
+            name="sendContact"
             onclick="checkContact()"
           />
         </form>
@@ -188,29 +200,40 @@
     </footer>
     <script>
       function checkContact() {
-        const name = document.querySelector(".contact-name").value;
-        const email = document.querySelector(".contact-email").value;
-        const phone = document.querySelector(".contact-phone").value;
-        const message = document.querySelector(".contact-message").value;
+        const name = document.querySelector(".contact-name");
+        const email = document.querySelector(".contact-email");
+        const phone = document.querySelector(".contact-phone");
+        const message = document.querySelector(".contact-message");
         const error = document.querySelector(".error-contact");
 
         let errorInfo;
         let re = /\S+@\S+\.\S+/;
         let phoneRe = /^[2-9]\d{2}[2-9]\d{2}\d{4}$/;
 
-        if (name == "") {
+        if (name.value == "") {
           errorInfo = "Please enter the Full Name ";
-        } else if (!re.test(email)) {
+        } else if (!re.test(email.value)) {
           errorInfo = "email is not valid";
-        } else if (!phoneRe.test(phone)) {
+        } else if (!phoneRe.test(phone.value)) {
           errorInfo = "Phone is not valid";
-        } else if (message == "") {
+        } else if (message.value == "") {
           errorInfo = "Please enter the message";
         } else {
-          errorInfo.innerHTML = "Mesajınız Gönderildi";
+          errorInfo= "Mesajınız Gönderildi";
         }
         error.innerHTML = "*" + errorInfo;
+          name.value="";
+          email.value="";
+          phone.value="";
+          message.value="";
       }
     </script>
+     <script>
+          function myFunction() {
+            if (confirm("<?php echo $_SESSION["user"]; ?> Are you sure to Log out!")) {
+              window.location.replace("userLogin.php");
+            }
+          }
+      </script>
   </body>
 </html>

@@ -1,3 +1,8 @@
+<?php 
+session_start();
+include_once "db.php"
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <!DOCTYPE html>
@@ -43,82 +48,66 @@
     <body>
       <header>
         <nav class="container">
-          <a href="./index.html">
+          <a href="./index.php">
             <img class="logo-img" src="./images/logo.png" alt="HealthNess" />
           </a>
           <ul class="nav-items">
             <li class="nav-item">
-              <a class="nav-link" href="/index.html">Home</a>
+              <a class="nav-link" href="/index.php">Home</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="./blogs.php">Blog</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./blogs.html">Blog</a>
+              <a class="nav-link" href="./dieticians.php">Dieticians</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./dieticians.html">Dieticians</a>
+              <a class="nav-link" href="./foods.php">Shop</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./foods.html">Foods</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="./contactPage.html">Contact</a>
+              <a class="nav-link" href="./contactPage.php">Contact</a>
             </li>
           </ul>
-          <a class="logo-button" href="#">
-            Log in
-            <i class="fas fa-sign-in-alt"></i>
-          </a>
+          <?php
+  if(isset($_SESSION["user"])){?>
+    <button type="button" class="btn text-light btn-dark user-button" onclick="myFunction()"><?php echo $_SESSION["user"]; ?></button>
+    <?php
+  }else{?>
+<a class="logo-button" href="./userLogin.php">
+          Log in
+          <i class="fas fa-sign-in-alt"></i>
+        </a>
+        
+<?php
+  }
+
+        
+?>
         </nav>
       </header>
-      <main class="container payment-container">
-        <form class="payment-card">
-          <div class="payment-card-input">
-            <i class="fas fa-user-alt"></i>
-            <input autocomplete="off" type="text" placeholder="Full Name" />
-          </div>
-          <div class="payment-card-input">
-            <i class="fas fa-credit-card"></i>
-            <input autocomplete="off" type="text" placeholder="Card Number" />
-          </div>
-          <div class="payment-card-dates">
-            <div>
-              <label for="months">MM</label>
-              <select name="months" id="months">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-              </select>
+      <main class="container">
+<?php
+      $blogId=$_GET["blogId"];
+      $Sorgu=mysqli_query($db,"SELECT * FROM blogs WHERE blogs_id='$blogId'");
+      while($blogs=mysqli_fetch_assoc($Sorgu)){?>
+      <h6 class="blog-details-page-header"><?php echo $blogs["blogs_title"] ?></h6>
+        <div class="blog-detail-page-container container">
+          <img src="<?php echo $blogs["blogs_details_img"] ?>" alt="" />
+          <div class="blog-detail-page-explanation">
+            <p>
+              <?php echo $blogs["blogs_main"] ?>
+            </p>
+            <div class="blog-detail-page-date">
+              <i class="far fa-calendar-alt"></i>
+              <p><?php echo substr($blogs["blogs_date"],0,10) ?></p>
             </div>
-            <div>
-              <label for="months">YY</label>
-              <select name="years" id="years" placeholder="asf">
-                <option value="2021">2021</option>
-                <option value="2020">2020</option>
-                <option value="2019">2019</option>
-                <option value="2018">2018</option>
-                <option value="2017">2017</option>
-                <option value="2016">2016</option>
-                <option value="2015">2015</option>
-                <option value="2014">2014</option>
-                <option value="2013">2013</option>
-                <option value="2012">2012</option>
-                <option value="2011">2011</option>
-                <option value="2010">2010</option>
-              </select>
-            </div>
-
-            <input type="text" placeholder="CVV" />
           </div>
-          <input type="button" class="payment-card-confirm" value="CONFIRM" />
-        </form>
+        </div>
+<?php
+      }
+?>
+        
       </main>
       <footer>
         <div class="up-footer">
@@ -183,6 +172,13 @@
           </div>
         </div>
       </footer>
+       <script>
+          function myFunction() {
+            if (confirm("<?php echo $_SESSION["user"]; ?> Are you sure to Log out!")) {
+              window.location.replace("userLogin.php");
+            }
+          }
+      </script>
     </body>
   </html>
 </html>

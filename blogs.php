@@ -1,3 +1,8 @@
+<?php 
+session_start();
+include_once "db.php"
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <!DOCTYPE html>
@@ -36,65 +41,98 @@
       />
 
       <!-- CSS -->
-      <link rel="stylesheet" href="style.css" />
+      <link rel='stylesheet' type='text/css' href='style.css'>
+      
 
       <title>HealthNess</title>
     </head>
     <body>
       <header>
         <nav class="container">
-          <a href="./index.html">
+          <a href="./index.php">
             <img class="logo-img" src="./images/logo.png" alt="HealthNess" />
           </a>
           <ul class="nav-items">
             <li class="nav-item">
-              <a class="nav-link" href="/index.html">Home</a>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-            <li class="nav-item">
-              <a class="nav-link" href="./blogs.html">Blog</a>
+              <a class="nav-link" href="index.php">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./dieticians.html">Dieticians</a>
+              <a class="nav-link" href="./dieticians.php">Dieticians</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./foods.html">Shop</a>
+              <a class="nav-link" href="./foods.php">Foods</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./contactPage.html">Contact</a>
+              <a class="nav-link" href="./contactPage.php">Contact</a>
             </li>
           </ul>
-          <a class="logo-button" href="#">
-            Log in
-            <i class="fas fa-sign-in-alt"></i>
-          </a>
+<?php
+  if(isset($_SESSION["user"])){?>
+    <button type="button" class="btn text-light btn-dark user-button" onclick="myFunction()"><?php echo $_SESSION["user"]; ?></button>
+    <?php
+  }else{?>
+<a class="logo-button" href="./userLogin.php">
+          Log in
+          <i class="fas fa-sign-in-alt"></i>
+        </a>
+        
+<?php
+  }
+
+        
+?>
         </nav>
       </header>
       <main class="container">
-        <h6 class="blog-details-page-header">Can Running Give You Abs ?</h6>
-        <div class="blog-detail-page-container container">
-          <img src="./images/blog-detail.png" alt="" />
-          <div class="blog-detail-page-explanation">
-            <p>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Magnam
-              minus cupiditate dolores natus, corporis laudantium quia debitis
-              pariatur. Et perspiciatis tenetur modi quia est illo inventore.
-              Qui corporis magni perferendis quos dolores autem explicabo
-              inventore doloremque voluptatum fugit necessitatibus, voluptas
-              consequuntur quaerat tempore? Assumenda quae quidem esse cum
-              laudantium sapiente, deleniti officiis ipsam dolorem mollitia,
-              saepe nulla ratione tempore. In aperiam sequi quisquam voluptatum
-              sed corporis officia nobis, modi non totam deserunt ab corrupti
-              ipsa beatae delectus a, magni similique saepe. Excepturi, quos
-              totam? Atque totam assumenda repudiandae fuga culpa nulla adipisci
-              consectetur non amet maxime quia, explicabo minus! Eum.
-            </p>
-            <div class="blog-detail-page-date">
-              <i class="far fa-calendar-alt"></i>
-              <p>18 AUGUST 2020</p>
-            </div>
-          </div>
+        <h3 class="foods-page-h3">BLOG</h3>
+        <form action="blogs.php" method="GET">
+        <div class="blog-page-search-border container">
+          <input name="blogName" type="text" placeholder="Search..." />
+          <button name="searchBlog" type="submit" ><i class="fas fa-search"></i></button>
         </div>
+        </form>
+        <section class="blog container">
+          <div class="blog-cards">
+<?php
+  if(isset($_GET["searchBlog"])){
+      $blogName=$_GET["blogName"];
+      $Sorgu=mysqli_query($db,"SELECT * FROM blogs WHERE blogs_title LIKE '%$blogName%'");
+      while($blogs=mysqli_fetch_assoc($Sorgu)){?>
+        <a href="./blogDetails.php?blogId=<?php echo$blogs["blogs_id"] ?>" class="blog-card blog-card-shadow">
+              <img src="<?php echo $blogs["blog_img"] ?>"  alt="" />
+              <div class="blog-details">
+                <h2><?php echo $blogs["blogs_title"] ?></h2>
+                <p><?php echo substr($blogs["blogs_main"],0,120)."..." ?> </p>
+                <div class="blog-date">
+                  <i class="far fa-calendar-alt"></i>
+                  <p><?php echo $blogs["blogs_date"] ?></p>
+                </div>
+              </div>
+            </a>
+<?php
+      }
+  }else{
+    $Sorgu=mysqli_query($db,"SELECT * FROM blogs");
+      while($blogs=mysqli_fetch_assoc($Sorgu)){?>
+        <a href="./blogDetails.php?blogId=<?php echo$blogs["blogs_id"] ?>" class="blog-card blog-card-shadow">
+              <img src="<?php echo $blogs["blog_img"] ?>"  alt="" />
+              <div class="blog-details">
+                <h2><?php echo $blogs["blogs_title"] ?></h2>
+                <p><?php echo substr($blogs["blogs_main"],0,120)."..." ?> </p>
+                <div class="blog-date">
+                  <i class="far fa-calendar-alt"></i>
+                  <p><?php echo $blogs["blogs_date"] ?></p>
+                </div>
+              </div>
+            </a>
+<?php
+  }
+}
+?>
+          </div>
+
+
+        </section>
       </main>
       <footer>
         <div class="up-footer">
@@ -159,6 +197,13 @@
           </div>
         </div>
       </footer>
+       <script>
+          function myFunction() {
+            if (confirm("<?php echo $_SESSION["user"]; ?> Are you sure to Log out!")) {
+              window.location.replace("userLogin.php");
+            }
+          }
+      </script>
     </body>
   </html>
 </html>

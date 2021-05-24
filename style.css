@@ -328,6 +328,7 @@ nav {
   display: flex;
   border-radius: 10px;
 }
+
 .blog-card:hover.blog-card img {
   transform: scale(1.2);
 }
@@ -401,6 +402,7 @@ nav {
 .dietician-cards img {
   width: 250px;
   height: auto;
+  border-radius: 10px;
 }
 .dieticians-card h3 {
   font-size: 1.2rem;
@@ -1040,10 +1042,10 @@ form input:focus {
 /* PAYMENT PAGE */
 
 .payment-container {
-  height: 70vh;
+  height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 .payment-card {
   border: 3px solid var(--blue);
@@ -1052,9 +1054,10 @@ form input:focus {
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
-  height: 50%;
+  height: 40%;
   width: 40%;
   border-radius: 20px;
+  margin-bottom: 40px;
 }
 .payment-card-input {
   display: flex;
